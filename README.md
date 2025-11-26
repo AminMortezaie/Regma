@@ -1,115 +1,87 @@
-
 # Regma
-Regulated Markets Architecture.
 
-## 🏛️ RWA Tokenization Platform
+**Regulated Markets Architecture** — A compliance-first RWA tokenization platform in Go.
 
-A modular, high-performance system to tokenize Real World Assets (RWAs) with compliance-first architecture using Go (Golang), Spring Boot, and optional Cosmos SDK modules.
+## Overview
 
-## 🔥 Overview
+Regma enables compliant tokenization of real-world assets (real estate, equities, debt instruments) with a focus on regulatory compliance. Inspired by ERC-3643.
 
-This project aims to enable compliant, scalable tokenization of real-world assets — such as real estate, equities, or debt instruments — across on-chain and off-chain systems. Inspired by ERC-3643 and extended with pragmatic, modular infrastructure.
+## Architecture
 
----
-
-## 🚀 Architecture Summary
-
-| Module                | Language     | Description |
-|-----------------------|--------------|-------------|
-| Identity Service      | Go           | Decentralized identity, claim verification, trusted issuers |
-| Compliance Engine     | Go           | Transfer rules, jurisdiction checks, investor limits |
-| Token Registry        | Go           | Asset metadata, minting, ownership mapping |
-| Blockchain Connector  | Go / Solidity / Cosmos | Anchoring, token issuance, interop with EVM / Cosmos chains |
-| Admin API & UI        | Spring Boot  | Web portal, compliance dashboard, asset lifecycle management |
-| Reporting & Audit     | Spring Boot  | Logs, audit trails, transaction history |
-
----
-
-## 📦 Module Structure (Planned)
+Single Go binary with clean internal packages. Monolith first, microservices never (until proven necessary).
 
 ```
-
 regma/
-├── identity/               # Go: identity service, trusted issuers
-├── compliance/             # Go: compliance rules, validator engine
-├── tokenization/           # Go: minting, registry, transfer logic
-├── blockchain/             # Go: ETH & Cosmos SDK interfaces
-├── admin-api/              # Spring Boot: admin backend
-├── ui-portal/              # (Optional) UI frontend
-├── reporting/              # Spring Boot: logs, reports
-└── docs/                   # Developer & compliance documentation
-
+├── cmd/regma/           # Application entry point
+├── internal/
+│   ├── api/             # HTTP server & handlers
+│   ├── config/          # Configuration management
+│   ├── domain/          # Core domain models
+│   ├── investor/        # Investor registry & KYC
+│   ├── compliance/      # Rule engine & transfer validation
+│   ├── asset/           # Asset registry & metadata
+│   └── storage/         # Database implementations
+├── pkg/                 # Shared utilities
+└── migrations/          # SQL migrations
 ```
 
----
+## Tech Stack
 
-## 🛠️ Technologies
+| Component | Choice |
+|-----------|--------|
+| Language | Go 1.24 |
+| HTTP | net/http (stdlib) |
+| Database | PostgreSQL |
+| Migrations | golang-migrate |
+| Config | Environment variables |
+| Logging | slog (stdlib) |
 
-- **Go (Golang)** – core logic (identity, compliance, registry)
-- **Spring Boot** – enterprise-facing API, dashboards
-- **Solidity (ERC-3643)** – optional smart contracts
-- **Cosmos SDK** – optional sovereign chain or interop module
-- **PostgreSQL** – relational store for metadata
-- **gRPC / REST** – internal APIs
-- **Docker + k8s** – deployment (future scope)
+## Quick Start
 
----
+```bash
+# Run the server
+go run ./cmd/regma
 
-## 🧱 Initial Roadmap
+# Health check
+curl http://localhost:8080/health
+```
 
-### ✅ Phase 1: Identity & Compliance Core (Go)
-- [ ] Decentralized Identity Service (DID, keys, claims)
-- [ ] Trusted Issuer Registry
-- [ ] Basic Compliance Engine (whitelists, residency checks)
+## Configuration
 
-### 🛠️ Phase 2: Token Engine
-- [ ] Token Registry
-- [ ] Token Minting / Ownership Logic
-- [ ] Transfer Validator
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | 8080 | Server port |
+| `ENVIRONMENT` | development | Environment name |
+| `DATABASE_URL` | postgres://localhost:5432/regma | PostgreSQL connection |
+| `JWT_SECRET` | change-me-in-production | JWT signing secret |
 
-### 🌐 Phase 3: Blockchain Layer
-- [ ] Ethereum ERC-3643 Connector
-- [ ] Cosmos SDK module (optional)
-- [ ] Wallet Integration (sign, verify)
+## Domain Models
 
-### 📊 Phase 4: Admin Portal (Spring Boot)
-- [ ] Admin REST API
-- [ ] User & Asset Management
-- [ ] Compliance Rule Editor UI
+### Investor
+Wallet-based identity with KYC status and jurisdiction tracking.
 
-### 📈 Phase 5: Reporting & Observability
-- [ ] Transaction Logs
-- [ ] Compliance Logs
-- [ ] Prometheus / Grafana Integration
+### Asset
+Tokenized real-world asset with compliance requirements.
 
----
+### Compliance Rules
+Transfer validation rules: jurisdiction checks, investor type restrictions, transfer limits.
 
-## 📜 Standards & Inspiration
+## Roadmap
+
+- [ ] PostgreSQL storage implementation
+- [ ] Investor CRUD API
+- [ ] Asset registry API
+- [ ] Compliance rule engine
+- [ ] Transfer validation
+- [ ] JWT authentication
+- [ ] Admin endpoints
+- [ ] Ethereum connector (ERC-3643)
+
+## Standards & Inspiration
 
 - [ERC-3643: Permissioned Token Standard](https://github.com/ERC-3643)
-- [ONCHAINID: Identity Layer](https://onchainid.com)
-- [Cosmos SDK](https://docs.cosmos.network)
-- [Verifiable Credentials W3C](https://www.w3.org/TR/vc-data-model/)
+- [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model/)
 
----
+## License
 
-## 👨‍💻 Contribution Guidelines
-
-1. Clone the repo
-2. Follow [contribution guide](docs/CONTRIBUTING.md) (to be written)
-3. Submit pull requests with clear, testable commits
-
----
-
-## ⚖️ License
-
-[MIT License](LICENSE)
-
----
-
-## 👁️‍🗨️ Contact
-
-For architecture decisions, roadmap contributions, or collaboration:
-[a.mortezaie98@gmail.com]
-
-
+MIT
