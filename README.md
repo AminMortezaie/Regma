@@ -29,7 +29,7 @@ This project aims to enable compliant, scalable tokenization of real-world asset
 
 ```
 
-rwa-platform/
+regma/
 ├── identity/               # Go: identity service, trusted issuers
 ├── compliance/             # Go: compliance rules, validator engine
 ├── tokenization/           # Go: minting, registry, transfer logic
